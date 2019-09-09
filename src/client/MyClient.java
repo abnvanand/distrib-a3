@@ -1,7 +1,7 @@
 package client;
 
 import common.Constants;
-import server.MyRemoteInterface;
+import common.MyRemoteInterface;
 
 import java.net.MalformedURLException;
 import java.rmi.Naming;
@@ -38,15 +38,28 @@ public class MyClient {
             System.out.println("Enter command");
             Scanner in = new Scanner(System.in);
             String line = in.nextLine();
-            String[] splits = line.split(" ");
+            String[] splits = line.split("\\s");
             String commandType = splits[0];
             String response = null;
+
             if (commandType.equals(CMD_ADD_EDGE)) {
-                response = String.valueOf(remoteObject.addEdge(splits[1], splits[2]));
+                if (splits.length > 3) { // Multiple graph case
+                    response = remoteObject.addEdge(splits[1], splits[2], splits[3]);
+                } else {
+                    response = remoteObject.addEdge(splits[1], splits[2]);
+                }
             } else if (commandType.equals(CMD_SHORTEST_DISTANCE)) {
-                response = remoteObject.shortestDistance(splits[1], splits[2]);
+                if (splits.length > 3) { // Multiple graph case
+                    response = remoteObject.shortestDistance(splits[1], splits[2], splits[3]);
+                } else {
+                    response = remoteObject.shortestDistance(splits[1], splits[2]);
+                }
             } else if (commandType.equals(CMD_GET_GRAPH)) {
-                response = remoteObject.getGraph();
+                if (splits.length > 1) {
+                    response = remoteObject.getGraph(splits[1]);
+                } else {
+                    response = remoteObject.getGraph();
+                }
             }
             System.out.println("Response from server: " + response);
         }

@@ -26,6 +26,9 @@ public class Graph {
     }
 
     Integer bfs(String source, String destination) {
+        if (!adjacencyList.containsKey(source) || !adjacencyList.containsKey(destination))
+            return -1;
+
         Queue<String> queue = new ArrayDeque<>();
         HashMap<String, Integer> distance = new HashMap<>();
 
